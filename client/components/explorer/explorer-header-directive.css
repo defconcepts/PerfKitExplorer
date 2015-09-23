@@ -41,3 +41,15 @@
   margin-right: 4px;
   padding: 4px;
 }
+
+.pk-header-status {
+  background-color: #fd0;
+  padding: 3px;
+  /* Set text to match .btn. TODO(klausw): figure out where these got set. */
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+}

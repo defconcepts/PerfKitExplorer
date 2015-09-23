@@ -310,6 +310,7 @@ DashboardService.prototype.saveDashboardCopy = function() {
  */
 DashboardService.prototype.setDashboard = function(dashboardConfig) {
   this.explorerStateService_.selectedDashboard = dashboardConfig;
+console.log('setDashboard start');
   if (dashboardConfig) {
     this.explorerStateService_.widgets.clear();
     this.explorerStateService_.containers.clear();
@@ -334,6 +335,7 @@ DashboardService.prototype.setDashboard = function(dashboardConfig) {
     }
     this.initializeParams_();
   }
+console.log('setDashboard end');
 };
 
 

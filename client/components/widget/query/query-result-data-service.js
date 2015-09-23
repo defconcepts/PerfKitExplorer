@@ -26,6 +26,8 @@ goog.provide('p3rf.perfkit.explorer.components.widget.query.DataTableJson');
 goog.require('p3rf.perfkit.explorer.components.error.ErrorTypes');
 goog.require('p3rf.perfkit.explorer.components.error.ErrorService');
 goog.require('p3rf.perfkit.explorer.components.explorer.ExplorerService');
+goog.require('p3rf.perfkit.explorer.components.util.WorkQueueService');
+goog.require('p3rf.perfkit.explorer.models.ResultsDataStatus');
 
 
 goog.scope(function() {
@@ -33,6 +35,8 @@ const explorer = p3rf.perfkit.explorer;
 const ErrorTypes = explorer.components.error.ErrorTypes;
 const ErrorService = explorer.components.error.ErrorService;
 const ExplorerService = explorer.components.explorer.ExplorerService;
+const WorkQueueService = explorer.components.util.WorkQueueService;
+const ResultsDataStatus = explorer.models.ResultsDataStatus;
 
 
 
@@ -40,6 +44,7 @@ const ExplorerService = explorer.components.explorer.ExplorerService;
  * See module docstring for more information about purpose and usage.
  *
  * @param {!ErrorService} errorService
+ * @param {!WorkQueueService} workQueueService
  * @param {!angular.$http} $http
  * @param {!angular.$filter} $filter
  * @param {angular.$cacheFactory} $cacheFactory
@@ -49,7 +54,8 @@ const ExplorerService = explorer.components.explorer.ExplorerService;
  * @ngInject
  */
 explorer.components.widget.query.QueryResultDataService = function(
-    explorerService, errorService, $http, $filter, $cacheFactory, $q, GvizDataTable) {
+    explorerService, errorService, workQueueService, $http, $filter,
+    $cacheFactory, $q, GvizDataTable) {
   /**
    * @type {!angular.$http}
    * @private
@@ -86,6 +92,11 @@ explorer.components.widget.query.QueryResultDataService = function(
    * @private
    */
   this.GvizDataTable_ = GvizDataTable;
+
+  /**
+   * @private {!WorkQueueService}
+   */
+  this.workQueue_ = workQueueService;
 };
 const QueryResultDataService = (
     explorer.components.widget.query.QueryResultDataService);
@@ -185,6 +196,9 @@ QueryResultDataService.prototype.fetchResults = function(widget) {
   let deferred = this.q_.defer();
   let cacheKey = angular.toJson(datasource);
   let cachedDataTable = this.cache_.get(cacheKey);
+  let isSelected = widget.state().selected;
+
+  console.log('fetchResults isCached:', !!cachedDataTable, 'isSelected:', isSelected);
 
   if (cachedDataTable) {
     deferred.resolve(cachedDataTable);
@@ -192,7 +206,9 @@ QueryResultDataService.prototype.fetchResults = function(widget) {
     let endpoint = '/data/sql';
 
     let postData = {'datasource': datasource};
-    let promise = this.http_.post(endpoint, postData);
+    let promise = this.workQueue_.enqueue(
+        () => this.http_.post(endpoint, postData),
+        isSelected);
 
     promise.then(angular.bind(this, function(response) {
       if (response.data.error) {
@@ -231,6 +247,10 @@ QueryResultDataService.prototype.fetchResults = function(widget) {
       this.errorService_.addError(ErrorTypes.DANGER, response.error || response.statusText);
 
       deferred.reject(response);
+    }));
+    // Progress notification
+    promise.then(null, null, angular.bind(this, function(notification) {
+      deferred.notify(notification);
     }));
   }
   return deferred.promise;
