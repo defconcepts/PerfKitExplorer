@@ -124,7 +124,10 @@ explorer.components.container.ContainerService = class {
    * @return {!ContainerWidgetConfig}
    * @export
    */
-  insert(opt_autoCreateWidget = true, opt_autoSelect = true) {
+  insert(opt_autoCreateWidget, opt_autoSelect) {
+    if (opt_autoCreateWidget === undefined) opt_autoCreateWidget = true;
+    if (opt_autoSelect === undefined) opt_autoSelect = true;
+
     let container = this.dashboardSvc.newContainer(opt_autoCreateWidget);
 
     this.dashboardSvc.containers.push(container);
@@ -149,7 +152,10 @@ explorer.components.container.ContainerService = class {
    * @return {!ContainerWidgetConfig}
    * @export
    */
-  insertAt(index, opt_autoCreateWidget = true, opt_autoSelect = true) {
+  insertAt(index, opt_autoCreateWidget, opt_autoSelect) {
+    if (opt_autoCreateWidget === undefined) opt_autoCreateWidget = true;
+    if (opt_autoSelect === undefined) opt_autoSelect = true;
+
     let container = this.dashboardSvc.newContainer(opt_autoCreateWidget);
 
     goog.array.insertAt(this.dashboardSvc.containers, container, index);
@@ -171,8 +177,10 @@ explorer.components.container.ContainerService = class {
    *     container is used.
    * @export
    */
-  insertAfter(
-      opt_container, opt_autoCreateWidget = true, opt_autoSelect = true) {
+  insertAfter(opt_container, opt_autoCreateWidget, opt_autoSelect) {
+    if (opt_autoCreateWidget === undefined) opt_autoCreateWidget = true;
+    if (opt_autoSelect === undefined) opt_autoSelect = true;
+
     let container = this.dashboardSvc.newContainer(opt_autoCreateWidget);
     let targetContainer = opt_container || this.dashboardSvc.selectedContainer;
 
@@ -200,8 +208,10 @@ explorer.components.container.ContainerService = class {
    *     follow the newly created one.  If not provided, the selected
    *     container is used.
    */
-  insertBefore(
-      opt_container, opt_autoCreateWidget = true, opt_autoSelect = true) {
+  insertBefore(opt_container, opt_autoCreateWidget, opt_autoSelect) {
+    if (opt_autoCreateWidget === undefined) opt_autoCreateWidget = true;
+    if (opt_autoSelect === undefined) opt_autoSelect = true;
+
     let container = this.dashboardSvc.newContainer(opt_autoCreateWidget);
     let targetContainer = opt_container || this.dashboardSvc.selectedContainer;
 

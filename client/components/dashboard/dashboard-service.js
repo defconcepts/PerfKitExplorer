@@ -485,7 +485,10 @@ DashboardService.prototype.scrollWidgetIntoView = function(widget) {
  * @export
  */
 DashboardService.prototype.selectContainer = function(
-    container, opt_supressStateChange = false, opt_autoSelectWidget = true) {
+    container, opt_supressStateChange, opt_autoSelectWidget) {
+  if (opt_suppressStateChange === undefined) opt_suppressStateChange = false;
+  if (opt_autoSelectWidget === undefined) opt_autoSelectWidget = true;
+
   let widget;
   let currentContainer = this.explorerStateService_.containers.selected;
 
@@ -654,8 +657,9 @@ DashboardService.prototype.restoreBuilder = function(widget) {
  * @return {!WidgetConfig} widget
  * @export
  */
-DashboardService.prototype.addWidget = function(
-    container, opt_autoSelect = true) {
+DashboardService.prototype.addWidget = function(container, opt_autoSelect) {
+  if (opt_autoSelect === undefined) opt_autoSelect = true;
+
   return this.addWidgetAt(container, null, opt_autoSelect);
 };
 
@@ -669,7 +673,9 @@ DashboardService.prototype.addWidget = function(
  * @export
  */
 DashboardService.prototype.addWidgetAfter = function(
-    container, widget, opt_autoSelect = true) {
+    container, widget, opt_autoSelect) {
+  if (opt_autoSelect === undefined) opt_autoSelect = true;
+
   goog.asserts.assert(container, 'Bad parameters: container is missing.');
 
   let index = container.model.container.children.indexOf(widget);
@@ -687,7 +693,9 @@ DashboardService.prototype.addWidgetAfter = function(
  * @export
  */
 DashboardService.prototype.addWidgetBefore = function(
-    container, widget, opt_autoSelect = true) {
+    container, widget, opt_autoSelect) {
+  if (opt_autoSelect === undefined) opt_autoSelect = true;
+
   goog.asserts.assert(container, 'Bad parameters: container is missing.');
 
   let index = container.model.container.children.indexOf(widget);
@@ -706,7 +714,9 @@ DashboardService.prototype.addWidgetBefore = function(
  * @export
  */
 DashboardService.prototype.addWidgetAt = function(
-    container, opt_index, opt_autoSelect = true) {
+    container, opt_index, opt_autoSelect) {
+  if (opt_autoSelect === undefined) opt_autoSelect = true;
+
   goog.asserts.assert(container, 'Bad parameters: container is missing.');
   let children = container.model.container.children;
 
@@ -817,7 +827,9 @@ DashboardService.prototype.moveWidgetToContainer = function(
  * @return {!ContainerWidgetConfig}
  */
 DashboardService.prototype.newContainer = function(
-    opt_autoCreateWidget = true) {
+    opt_autoCreateWidget) {
+  if (opt_autoCreateWidget === undefined) opt_autoCreateWidget = true;
+
   let container = new ContainerWidgetConfig(this.widgetFactoryService_);
 
   if (opt_autoCreateWidget) {

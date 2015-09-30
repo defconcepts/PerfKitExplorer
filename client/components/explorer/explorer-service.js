@@ -246,7 +246,9 @@ ExplorerService.prototype.initializeDashboard = function() {
  * Creates a new dashboard.
  */
 ExplorerService.prototype.newDashboard = function(
-    opt_autoCreateWidget = true, opt_autoSelect) {
+    opt_autoCreateWidget, opt_autoSelect) {
+  if (opt_autoCreateWidget === undefined) opt_autoCreateWidget = true;
+
   var dashboard = new DashboardConfig();
   dashboard.model.version =
       this.dashboardVersionService_.currentVersion.version;
