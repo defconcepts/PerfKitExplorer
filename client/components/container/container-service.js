@@ -253,4 +253,10 @@ explorer.components.container.ContainerService = class {
 };
 const ContainerService = explorer.components.container.ContainerService;
 
+ContainerService.__stringVal = ContainerService.toString();
+
+ContainerService.toString = function() {
+  return ContainerService.__stringVal.replace(/class\s*{\s*constructor/, 'function');
+};
+
 });  // goog.scope
